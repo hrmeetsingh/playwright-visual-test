@@ -1,23 +1,18 @@
 import { test, expect } from '@playwright/test';
 
-test('visual comparison test with timing', async ({ page }) => {
-    // Array to store timing data
+test('Visual comparison test with timing of full page', async ({ page }) => {
     const timings = [{}];
     
-    // Function to measure execution time
     async function measureTime(fn, label) {
         const start = process.hrtime.bigint();
         await fn();
         const end = process.hrtime.bigint();
-        const duration = Number(end - start) / 1e6; // Convert to milliseconds
+        const duration = Number(end - start) / 1e6;
         timings.push({ label, duration });
-        console.log(`${label}: ${duration.toFixed(2)}ms`);
     }
 
-    // Navigate to the page
     await measureTime(async () => {
         await page.goto('https://example.com');
-        // Wait for any animations or dynamic content to settle
         await page.waitForLoadState('networkidle');
     }, 'Page Navigation');
 
@@ -27,12 +22,11 @@ test('visual comparison test with timing', async ({ page }) => {
             fullPage: true,
             timeout: 10000,
             animations: 'disabled',
-            mask: [page.locator('.dynamic-content')], // Mask dynamic elements
-            threshold: 0.2 // Allow 0.2% pixel difference
+            mask: [page.locator('.dynamic-content')],
+            threshold: 0.2 
         });
     }, 'Full Page Screenshot Comparison');
 
-    // Take screenshot of specific element
     await measureTime(async () => {
         const element = page.locator('h1');
         await expect(element).toHaveScreenshot('header.png', {
@@ -42,7 +36,6 @@ test('visual comparison test with timing', async ({ page }) => {
         });
     }, 'Element Screenshot Comparison');
 
-    // Multiple element screenshots
     await measureTime(async () => {
         const elements = await page.locator('p').all();
         for (let i = 0; i < elements.length; i++) {
@@ -54,13 +47,11 @@ test('visual comparison test with timing', async ({ page }) => {
         }
     }, 'Multiple Elements Screenshot Comparison');
 
-    // Output timing summary
     console.log('\nTiming Summary:');
     console.table(timings);
 });
 
-// Test for comparing specific regions
-test('region comparison test', async ({ page }) => {
+test('Visual comparison test with timing of clipped region comparison', async ({ page }) => {
     const timings = [{}];
     
     async function measureTime(fn, label) {
@@ -75,7 +66,6 @@ test('region comparison test', async ({ page }) => {
     await page.goto('https://example.com');
     await page.waitForLoadState('networkidle');
 
-    // Compare specific regions of the page
     await measureTime(async () => {
         await expect(page).toHaveScreenshot('region.png', {
             clip: {
@@ -88,9 +78,8 @@ test('region comparison test', async ({ page }) => {
             animations: 'disabled',
             threshold: 0.1
         });
-    }, 'Region Screenshot Comparison');
+    }, 'Clipped Region Screenshot Comparison');
 
-    // Compare multiple regions
     await measureTime(async () => {
         const regions = [
             { x: 0, y: 0, width: 200, height: 200 },
@@ -112,7 +101,6 @@ test('region comparison test', async ({ page }) => {
     console.table(timings);
 });
 
-// Configuration for the visual comparison
 const config = {
     expect: {
         toHaveScreenshot: {
