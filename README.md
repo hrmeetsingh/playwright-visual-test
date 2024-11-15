@@ -50,6 +50,7 @@ function measureExecutionTime(timings: { label: string; duration: number }[]) {
 ```
 
 ### Decorator usage
+This is a simplified example of how to use the decorator to measure the execution time of a visual test case using playwright. The use case is applicable to most test cases arranged in a page object model. where the test case is a method of a page object. The design of the decorator allows for multiple test cases to be measured and the results to be aggregated in a single test report.
 
 ```typescript
 @measureExecutionTime(timings)
