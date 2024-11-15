@@ -31,23 +31,7 @@ This project demonstrates how to perform visual testing using Playwright. The ex
 
 Test file: tests/visual-test-decorator.spec.ts has a test case that uses a decorator to measure the execution timings of the test case
 
-```typescript
-@measureExecutionTime(timings)
-async captureFullPage() {
-            await this.page.goto('https://example.com');
-            await this.page.waitForLoadState('networkidle');
-            
-            await expect(this.page).toHaveScreenshot('full-page.png', {
-                fullPage: true,
-                timeout: 10000,
-                animations: 'disabled',
-                mask: [this.page.locator('.dynamic-content')],
-                threshold: 0.2
-            });
-        }
-```
-
-## Decorator function code 
+### Decorator function code 
 
 ```typescript
 function measureExecutionTime(timings: { label: string; duration: number }[]) {
@@ -64,3 +48,22 @@ function measureExecutionTime(timings: { label: string; duration: number }[]) {
     };
 }
 ```
+
+### Decorator usage
+
+```typescript
+@measureExecutionTime(timings)
+async captureFullPage() {
+            await this.page.goto('https://example.com');
+            await this.page.waitForLoadState('networkidle');
+            
+            await expect(this.page).toHaveScreenshot('full-page.png', {
+                fullPage: true,
+                timeout: 10000,
+                animations: 'disabled',
+                mask: [this.page.locator('.dynamic-content')],
+                threshold: 0.2
+            });
+        }
+```
+
